@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Menu, Utensils } from "lucide-react";
 import { useState } from "react";
@@ -7,7 +7,8 @@ const Navbar = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isActive = (path: string) => location.pathname === path;
+  const [currentPath] = location;
+  const isActive = (path: string) => currentPath === path;
 
   const navLinks = [
     { path: "/", label: "Home" },

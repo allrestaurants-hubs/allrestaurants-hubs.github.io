@@ -1,4 +1,5 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "wouter";
+import { Link } from "wouter";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,8 @@ import sushiImage from "@/assets/sushi.jpg";
 import saladImage from "@/assets/salad.jpg";
 
 const Menu = () => {
-  const { id } = useParams();
+  const params = useParams<{ id: string }>();
+  const id = params.id;
 
   // Mock restaurant data
   const restaurants: Record<string, any> = {

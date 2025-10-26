@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
+import http from "http";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -17,14 +18,14 @@ export function log(message: string) {
   console.log(`${formattedTime} [express] ${message}`);
 }
 
-export async function setupVite(app: Express, server: () => void) {
+export async function setupVite(app: Express, server: () => Express) {
   const vite = await createViteServer({
     server: { middlewareMode: true },
     appType: "custom",
   });
 
   app.use(vite.middlewares);
-  app.use("*", async (req, res, next) => {
+  app.use(async (req, res, next) => {
     const url = req.originalUrl;
 
     try {
@@ -42,8 +43,7 @@ export async function setupVite(app: Express, server: () => void) {
     }
   });
 
-  const httpServer = server();
-  return httpServer;
+  return http.createServer(app);
 }
 
 export function serveStatic(app: Express) {
@@ -57,7 +57,7 @@ export function serveStatic(app: Express) {
 
   app.use(express.static(distPath));
 
-  app.use("*", (_req, res) => {
+  app.use((_req, res) => {
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 
